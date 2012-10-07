@@ -102,4 +102,13 @@ class SassImportNode extends SassNode {
     }
     return $imported;
   }
+
+  /**
+   * Return the files used by this import node.
+   * @return array the files imported by this node.
+   */
+  public function getFiles()
+  {
+    return $this->files;
+  }
 }

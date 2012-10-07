@@ -51,6 +51,13 @@ class SassFile {
 
     $sassParser = new SassParser($options);
     $tree = $sassParser->parse($contents, FALSE);
+
+    // Need to add the parsed files to the passed in parser.
+    foreach ($sassParser->getParsedFiles() as $parsed_file)
+    {
+      $parser->addParsedFile($parsed_file);
+    }
+
     return $tree;
   }
 

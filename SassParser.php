@@ -215,6 +215,12 @@ class SassParser {
   public $debug = FALSE;
 
   /**
+   * parsedFiles:
+   * @var array An array containing the parsed files used to generate the output
+   */
+  private $parsedFiles = array();
+
+  /**
    * Constructor.
    * Sets parser options
    * @param array $options
@@ -356,6 +362,11 @@ class SassParser {
       'warn' => NULL,
       'debug' => NULL,
     );
+  }
+
+  public function getParsedFiles()
+  {
+    return $this->parsedFiles;
   }
 
   public function getOptions() {
@@ -773,7 +784,19 @@ class SassParser {
             }
           }
         }
-        return new SassImportNode($token, $parent);
+        $node = new SassImportNode($token, $parent);
+        foreach ($node->getFiles() as $file)
+        {
+          $files = SassFile::get_file($file, $this);
+          if (is_array($files))
+          {
+            foreach ($files as $file)
+            {
+              $this->parsedFiles[$file] = $file;
+            }
+          }
+        }
+        return $node;
         break;
       case '@each':
         return new SassEachNode($token);
@@ -830,5 +853,13 @@ class SassParser {
     } // foreach
     $this->indentChar = ' ';
     $this->indentSpaces = 2;
+  }
+
+  /**
+   * Add a file to the list of parsed files.
+   */
+  public function addParsedFile($file)
+  {
+    $this->parsedFiles[$file] = $file;
   }
 }
