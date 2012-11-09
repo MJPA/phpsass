@@ -792,7 +792,7 @@ class SassParser {
           {
             foreach ($files as $file)
             {
-              $this->parsedFiles[$file] = $file;
+              $this->parsedFiles[$file] = filemtime($file);
             }
           }
         }
